@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/17 18:55:55 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/17 21:11:52 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,27 @@ char	*get_next_line(int fd, size_t buffer_size)
 	void	*buffer;
 	ssize_t	checker;
 	char	eof;
+	void	*nl_pos;
 
 	checker = 0;
 	eof = 0;
 	buffer = malloc(buffer_size); //check if buffer_size //calloc?
 	//check if null
 	eof = ft_read(fd, buffer, buffer_size, &checker);
-	while (eof && !ft_strchr(buffer, '\n') && checker > 0)
+	//printf("%i\n\n", !(ft_strchr(buffer, '\n')));
+	nl_pos = ft_strchr(buffer, '\n');
+	while (!eof && !nl_pos && checker != -1)
 		eof = ft_read(fd, buffer, buffer_size, &checker);
 	//what do i have to return?
-	if (ft_strchr(buffer, '\n'))
+	if (nl_pos)
 	{
-		printf("%zd\n", checker);
+		printf("nl found at char %i\n", (int)(nl_pos - buffer));
+		//printf("%zd\n", checker);
 		//free(buffer);
 		//buffer = malloc(checker + 1);
 		//ft_read(fd, buffer, checker, );
 	}
+	printf("%s\n", (char *)buffer);
 	return (buffer);
 }
 
@@ -80,6 +85,6 @@ int main(void)
 	int fd;
 	fd = ft_open("test.txt");
 	//printf("%s", get_next_line(fd, 3));
-	get_next_line(fd, 8);
+	get_next_line(fd, 6);
 	return 0;
 }
