@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/17 21:11:52 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/18 07:30:48 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,24 +52,25 @@ char	*get_next_line(int fd, size_t buffer_size)
 	ssize_t	checker;
 	char	eof;
 	void	*nl_pos;
+	unsigned long	i;
 
 	checker = 0;
 	eof = 0;
 	buffer = malloc(buffer_size); //check if buffer_size //calloc?
 	//check if null
 	eof = ft_read(fd, buffer, buffer_size, &checker);
-	//printf("%i\n\n", !(ft_strchr(buffer, '\n')));
 	nl_pos = ft_strchr(buffer, '\n');
 	while (!eof && !nl_pos && checker != -1)
 		eof = ft_read(fd, buffer, buffer_size, &checker);
 	//what do i have to return?
 	if (nl_pos)
 	{
-		printf("nl found at char %i\n", (int)(nl_pos - buffer));
+		i = nl_pos - buffer;
+		//printf("nl found at char %i\n", (int)(nl_pos - buffer));
 		//printf("%zd\n", checker);
-		//free(buffer);
-		//buffer = malloc(checker + 1);
-		//ft_read(fd, buffer, checker, );
+		free(buffer);
+		buffer = malloc(i + 1);
+		ft_read(fd, buffer, i + 1, &checker);
 	}
 	printf("%s\n", (char *)buffer);
 	return (buffer);
