@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/18 10:32:42 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/18 12:04:59 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,12 @@ char	*get_next_line(int fd, size_t buffer_size)
 	buffer = malloc(buffer_size); //check if buffer_size //calloc?
 	//check if null
 	eof = ft_read(fd, buffer, buffer_size, &checker);
-	//nl_pos = ft_strchr(buffer, '\n');
 	while (!eof && !ft_strchr(buffer, '\n'))
 	{
-		//printf("%i", ft_strchr(buffer, '\n') == NULL);
-		printf("--->%s", (char *)buffer);
+		//printf("--->%s", (char *)buffer);
 		eof = ft_read(fd, buffer, buffer_size, &checker);
 	}
-		//what do i have to return?
+	//what do i have to return?
 	//if (ft_strchr(buffer, '\n'))
 	//{
 		//i = nl_pos - buffer;
