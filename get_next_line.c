@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/21 14:42:18 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:49:14 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	ft_read(int fd, void *buffer, size_t buffer_size, ssize_t *checker)
 	ssize_t	aux;
 
 	//ft_bzero(buffer, buffer_size);
-	aux = read(fd, buffer, buffer_size);
+	aux = read(fd, buffer + *checker, buffer_size);
 	//eof reached
 	if (!aux)
 		return (1);
@@ -52,7 +52,8 @@ char	*get_next_line(int fd, size_t buffer_size)
 	void	*nl_pos;
 	static unsigned long	i = 0;
 
-	if (!buffer && !i)
+	printf("start--->%i", (int)i);
+	if (!i)
 	{
 		//check if buffer_size
 		buffer = malloc(buffer_size); //calloc?
@@ -66,13 +67,17 @@ char	*get_next_line(int fd, size_t buffer_size)
 		{
 			buffer_aux = malloc(checker + buffer_size);
 			//check if null
-			ft_memmove(buffer_aux, buffer, checker); //+buffer_size?
-			free(buffer);
-			buffer = buffer_aux;
-			buffer_aux = NULL;
+			printf("\npointer--->%p<---", buffer_aux);
+			if (buffer)
+			{
+				ft_memmove(buffer_aux, buffer, checker); //+buffer_size?
+				free(buffer);
+				buffer = buffer_aux;
+				buffer_aux = NULL;
+			}
 		}
-		eof = ft_read(fd, buffer + checker, buffer_size, &checker);
-		//printf("debug--->%s<---", (char *)buffer);
+		eof = ft_read(fd, buffer, buffer_size, &checker);
+		printf("debug--->%s<---", (char *)buffer);
 		if(ft_strchr(buffer, '\n'))
 			break;
 	}
@@ -97,6 +102,7 @@ char	*get_next_line(int fd, size_t buffer_size)
 			if (buffer + (checker - 1) == nl_pos)
 			{
 				printf("-->nl_pos is in the same place as buffer + checker<--");
+				return (0);
 			}
 			else
 			{
@@ -124,6 +130,7 @@ int main(void)
 {
 	int fd;
 	fd = ft_open("test.txt");
+	printf("%s", get_next_line(fd, 1));
 	printf("%s", get_next_line(fd, 1));
 	return 0;
 }
