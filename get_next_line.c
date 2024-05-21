@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/20 23:18:24 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/21 14:42:18 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,6 @@
 //remove
 #include <fcntl.h>
 #include <stdio.h>
-
-void	*ft_memmove(void *dst, const void *src, size_t len)
-{
-	char		*temp_dst;
-	const char	*temp_src;
-
-	if (!src && !dst)
-		return (dst);
-	temp_dst = (char *)dst;
-	temp_src = (const char *)src;
-	if ((const char *)src < (char *)dst)
-		while (len--)
-			*(temp_dst + len) = *(temp_src + len);
-	else
-		while (len--)
-			*temp_dst++ = *temp_src++;
-	return (dst);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned char	*p;
-
-	p = (unsigned char *)s;
-	while (n--)
-		*p++ = 0;
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s && *s != (char)c)
-		s++;
-	if (*s == (char)c)
-		return ((char *)s);
-	if (!*s)
-		return (NULL);
-	return ((char *)s);
-}
 
 char	ft_read(int fd, void *buffer, size_t buffer_size, ssize_t *checker)
 {
@@ -65,7 +27,10 @@ char	ft_read(int fd, void *buffer, size_t buffer_size, ssize_t *checker)
 		return (1);
 	//error, u might check errno in the future
 	if (aux < 0)
+	{
 		*checker = -1;
+		return (0);
+	}
 	//bytes read and reached, double check it in case of terminal or pipe
 	*checker += aux;
 	//eof also reached
@@ -87,22 +52,13 @@ char	*get_next_line(int fd, size_t buffer_size)
 	void	*nl_pos;
 	static unsigned long	i = 0;
 
-	//buffer = NULL;
 	if (!buffer && !i)
 	{
-		//checker = 0;
-		//eof = 0;
 		//check if buffer_size
 		buffer = malloc(buffer_size); //calloc?
 		//check if null
 		ft_bzero(buffer, buffer_size); //necessary?
 	}
-	//if (buffer)
-	//{
-	//	nl_pos = ft_strchr(buffer, '\n');
-	//	if (nl_pos && *(nl_pos + 1))
-			///////
-	//}
 	while (!eof)
 	{
 		//printf("--->%s", (char *)buffer);
@@ -113,10 +69,10 @@ char	*get_next_line(int fd, size_t buffer_size)
 			ft_memmove(buffer_aux, buffer, checker); //+buffer_size?
 			free(buffer);
 			buffer = buffer_aux;
-			//buffer_aux = NULL;
+			buffer_aux = NULL;
 		}
 		eof = ft_read(fd, buffer + checker, buffer_size, &checker);
-		printf("debug--->%s<---", (char *)buffer);
+		//printf("debug--->%s<---", (char *)buffer);
 		if(ft_strchr(buffer, '\n'))
 			break;
 	}
@@ -125,34 +81,28 @@ char	*get_next_line(int fd, size_t buffer_size)
 		nl_pos = ft_strchr(buffer, '\n');
 		if (nl_pos)
 		{
-			//if (*((char *)nl_pos + 1))
-			//{
-				//printf("debug--->%i<---", (int)checker);
-				//printf("about to malloc--->%li<---", (buffer + checker) - nl_pos);
+			if (nl_pos < buffer + (checker - 1))
+			{
 				buffer_aux = malloc((buffer + checker) - nl_pos);
 				//check null
-				//printf("debug--->%s<---", (char *)nl_pos);
-				if (*((char *)nl_pos + 1))
-					ft_memmove(buffer_aux, nl_pos + 1, (buffer + checker) - nl_pos);
-				else
-					ft_memmove(buffer_aux, nl_pos, (buffer + checker) - nl_pos);
-				//printf("about to malloc--->%li<---", nl_pos - buffer);
-				buffer_return = malloc((nl_pos - buffer));
+				ft_memmove(buffer_aux, nl_pos + 1, (buffer + checker) - (nl_pos + 1));
+				buffer_return = malloc((nl_pos + 1 - buffer));
 				//check null
-				//printf("about to malloc--->%li<---", (nl_pos - buffer) + 1);
-				ft_memmove(buffer_return, buffer, (nl_pos - buffer) + 1);
+				ft_memmove(buffer_return, buffer, (nl_pos + 1 - buffer));
 				free(buffer);
-				//printf("left--->%s<---", (char *)buffer_aux);
 				buffer = buffer_aux;
+				buffer_aux = NULL;
 				return (buffer_return);
-			//}
-			//printf("buffer---->%s\n", (char *)buffer);
-			//printf("nl_pos---->%s\n", (char *)nl_pos); //check nl_pos+1 is not null
+			}
+			if (buffer + (checker - 1) == nl_pos)
+			{
+				printf("-->nl_pos is in the same place as buffer + checker<--");
+			}
+			else
+			{
+				printf("-->there's no new line in the buffer?<--");
+			}
 		}
-		//else //eof stopped the loop
-		//{
-		//	printf("buffer---->%s", (char *)buffer);
-		//}
 		buffer_return = malloc(checker);
 		//check null
 		ft_memmove(buffer_return, buffer, checker);
@@ -174,7 +124,6 @@ int main(void)
 {
 	int fd;
 	fd = ft_open("test.txt");
-	printf("%s", get_next_line(fd, 8));
-	printf("%s", get_next_line(fd, 8));
+	printf("%s", get_next_line(fd, 1));
 	return 0;
 }
