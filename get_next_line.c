@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/21 16:49:14 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:53:52 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	ft_read(int fd, void *buffer, size_t buffer_size, ssize_t *checker)
 	//ft_bzero(buffer, buffer_size);
 	aux = read(fd, buffer + *checker, buffer_size);
 	//eof reached
-	if (!aux)
+	if (aux == 0)
 		return (1);
 	//error, u might check errno in the future
 	if (aux < 0)
@@ -36,7 +36,7 @@ char	ft_read(int fd, void *buffer, size_t buffer_size, ssize_t *checker)
 	//eof also reached
 	if (aux < buffer_size)
 	{
-		*checker = aux;
+		//*checker = aux;
 		return (1);
 	}
 	return (0);
@@ -52,8 +52,8 @@ char	*get_next_line(int fd, size_t buffer_size)
 	void	*nl_pos;
 	static unsigned long	i = 0;
 
-	printf("start--->%i", (int)i);
-	if (!i)
+	//printf("start--->%i", (int)i);
+	if (!buffer) //!i
 	{
 		//check if buffer_size
 		buffer = malloc(buffer_size); //calloc?
@@ -67,17 +67,16 @@ char	*get_next_line(int fd, size_t buffer_size)
 		{
 			buffer_aux = malloc(checker + buffer_size);
 			//check if null
-			printf("\npointer--->%p<---", buffer_aux);
-			if (buffer)
-			{
-				ft_memmove(buffer_aux, buffer, checker); //+buffer_size?
-				free(buffer);
-				buffer = buffer_aux;
-				buffer_aux = NULL;
-			}
+			//printf("\npointer--->%p<---", buffer_aux);
+			//if (buffer)
+			//{
+			ft_memmove(buffer_aux, buffer, checker); //+buffer_size?
+			free(buffer);
+			buffer = buffer_aux;
+			//}
 		}
-		eof = ft_read(fd, buffer, buffer_size, &checker);
-		printf("debug--->%s<---", (char *)buffer);
+		eof = ft_read(fd, buffer + checker, buffer_size, &checker);
+		//printf("debug--->%s<---", (char *)buffer);
 		if(ft_strchr(buffer, '\n'))
 			break;
 	}
@@ -86,35 +85,37 @@ char	*get_next_line(int fd, size_t buffer_size)
 		nl_pos = ft_strchr(buffer, '\n');
 		if (nl_pos)
 		{
-			if (nl_pos < buffer + (checker - 1))
-			{
-				buffer_aux = malloc((buffer + checker) - nl_pos);
-				//check null
-				ft_memmove(buffer_aux, nl_pos + 1, (buffer + checker) - (nl_pos + 1));
-				buffer_return = malloc((nl_pos + 1 - buffer));
-				//check null
-				ft_memmove(buffer_return, buffer, (nl_pos + 1 - buffer));
-				free(buffer);
-				buffer = buffer_aux;
-				buffer_aux = NULL;
-				return (buffer_return);
-			}
-			if (buffer + (checker - 1) == nl_pos)
-			{
-				printf("-->nl_pos is in the same place as buffer + checker<--");
-				return (0);
-			}
-			else
-			{
-				printf("-->there's no new line in the buffer?<--");
-			}
+			int extra = (nl_pos < buffer + (checker - 1));
+
+			buffer_return = malloc(nl_pos - buffer + 1 + extra);
+			//check null
+			ft_memmove(buffer_return, buffer, nl_pos - buffer + extra);
+			((char*)buffer_return)[nl_pos - buffer + extra] = '\0';
+
+			buffer_aux = malloc(buffer + checker - nl_pos - 1);
+			//check null
+			ft_memmove(buffer_aux, nl_pos + 1, buffer + checker - nl_pos - 1);
+			free(buffer);
+			buffer = buffer_aux;
+			checker -= (nl_pos + 1 - buffer);
+			return (buffer_return);
+			//if (buffer + (checker - 1) == nl_pos)
+			//{
+			//	printf("-->nl_pos is in the same place as buffer + checker<--");
+			//	return (0);
+			//}
+			//else
+			//{
+			//	printf("-->there's no new line in the buffer?<--");
+			//}
 		}
-		buffer_return = malloc(checker);
+		buffer_return = malloc(checker + 1);
 		//check null
 		ft_memmove(buffer_return, buffer, checker);
+		((char*)buffer_return)[checker] = '\0';
 		free(buffer);
 		buffer = NULL;
-		i = 1;
+		checker = 0;
 		//printf("debug---->%s\n", (char *)buffer);
 		return (buffer_return);
 	}
@@ -130,7 +131,6 @@ int main(void)
 {
 	int fd;
 	fd = ft_open("test.txt");
-	printf("%s", get_next_line(fd, 1));
-	printf("%s", get_next_line(fd, 1));
+	printf("%s", get_next_line(fd, 5));
 	return 0;
 }
