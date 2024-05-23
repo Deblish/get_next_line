@@ -6,12 +6,12 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/23 12:07:16 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/23 15:13:15 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#define BUFFER_SIZE 10
+#define BUFFER_SIZE 6
 //remove
 #include <fcntl.h>
 #include <stdio.h>
@@ -43,7 +43,7 @@ char	*ft_resize(char **buffer, int *buffer_length)
 {
 	char	*new_buffer;
 
-	new_buffer = (char	*)malloc(sizeof(char) * (*buffer_length + BUFFER_SIZE));
+	new_buffer = (char	*)malloc(sizeof(char) * (*buffer_length));
 	if (!new_buffer)
 		return (NULL);
 	ft_memmove(new_buffer, *buffer, *buffer_length); //double check this
@@ -54,23 +54,31 @@ char	*ft_resize(char **buffer, int *buffer_length)
 
 static char	*resize_and_read(int fd, char **buffer, int *buffer_length, int *eof)
 {
-	int		bytes_read;
+	int	bytes_read;
 
 	if (*buffer == NULL)
-	{
 		if (!ft_resize(buffer, buffer_length)) //buffer_length here is zero
 			return (NULL);
-	}
 	//you gotta change this
-	while ((bytes_read = read(fd, *buffer + *buffer_length, BUFFER_SIZE)) > 0)
+	bytes_read = 1; 
+	while (bytes_read > 0)
 	{
-		*buffer_length += bytes_read;
 		if (*buffer_length >= BUFFER_SIZE)
 			if(!ft_resize(buffer, buffer_length))
 				return (NULL);
+		bytes_read = read(fd, *buffer + *buffer_length, BUFFER_SIZE);
+		if (bytes_read < 0)
+			break;
+		*buffer_length += bytes_read;
+		if (ft_strchr(*buffer, '\n'))
+			break;
 	}
+	//buffer[*buffer_length] = 0;
 	if (bytes_read == -1) //and eof?
+	{
+		free(buffer);
 		return (NULL);
+	}
 	return (*buffer);
 }
 
@@ -109,7 +117,13 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!resize_and_read(fd, &buffer, &buffer_length, &eof))
 		return (NULL);
-	printf("%s", buffer);
+	//if (!resize_and_read(fd, &buffer, &buffer_length, &eof))
+	//	return (NULL);
+	//if (!resize_and_read(fd, &buffer, &buffer_length, &eof))
+	//	return (NULL);
+	//if (!resize_and_read(fd, &buffer, &buffer_length, &eof))
+	//	return (NULL);
+	//printf("%s", buffer);
 	/*line = extract_line(&buffer, &buffer_length);
 	if (line)
 		return (line);
@@ -124,7 +138,7 @@ char	*get_next_line(int fd)
 		return (line);
 	}
 	*/
-	return (NULL);
+	return (buffer);
 }
 
 int	ft_open(char *file)
@@ -136,6 +150,8 @@ int main(void)
 {
 	int fd;
 	fd = ft_open("test.txt");
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	return 0;
 }
