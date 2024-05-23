@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/22 14:30:04 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/23 12:07:16 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,35 +38,43 @@ char	ft_read(int fd, void *buffer, size_t buffer_size, ssize_t *checker)
 	return (0);
 }
 */
-static char	*resize_and_read(int fd, char **buffer, int *buffer_length, int *eof)
+
+char	*ft_resize(char **buffer, int *buffer_length)
 {
 	char	*new_buffer;
+
+	new_buffer = (char	*)malloc(sizeof(char) * (*buffer_length + BUFFER_SIZE));
+	if (!new_buffer)
+		return (NULL);
+	ft_memmove(new_buffer, *buffer, *buffer_length); //double check this
+	free(*buffer);
+	*buffer = new_buffer; 
+	return (*buffer); //double check this
+}
+
+static char	*resize_and_read(int fd, char **buffer, int *buffer_length, int *eof)
+{
 	int		bytes_read;
 
 	if (*buffer == NULL)
 	{
-		*buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
-			if (!*buffer)
-				return (NULL);
+		if (!ft_resize(buffer, buffer_length)) //buffer_length here is zero
+			return (NULL);
 	}
+	//you gotta change this
 	while ((bytes_read = read(fd, *buffer + *buffer_length, BUFFER_SIZE)) > 0)
 	{
 		*buffer_length += bytes_read;
 		if (*buffer_length >= BUFFER_SIZE)
-		{
-			new_buffer = (char *)malloc(sizeof(char) * (*buffer_length + BUFFER_SIZE));
-			if (!new_buffer)
+			if(!ft_resize(buffer, buffer_length))
 				return (NULL);
-			ft_memmove(new_buffer, *buffer, *buffer_length);
-			free(*buffer);
-			*buffer = new_buffer;
-		}
 	}
-	if (bytes_read == -1 || (*eof = (bytes_read == 0)))
+	if (bytes_read == -1) //and eof?
 		return (NULL);
 	return (*buffer);
 }
 
+/*
 static char	*extract_line(char **buffer, int *buffer_length)
 {
 	int	i;
@@ -88,6 +96,7 @@ static char	*extract_line(char **buffer, int *buffer_length)
 	}
 	return (NULL);
 }
+*/
 
 char	*get_next_line(int fd)
 {
@@ -100,7 +109,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!resize_and_read(fd, &buffer, &buffer_length, &eof))
 		return (NULL);
-	line = extract_line(&buffer, &buffer_length);
+	printf("%s", buffer);
+	/*line = extract_line(&buffer, &buffer_length);
 	if (line)
 		return (line);
 	if (buffer_length > 0 && eof)
@@ -113,6 +123,7 @@ char	*get_next_line(int fd)
 		buffer_length = 0;
 		return (line);
 	}
+	*/
 	return (NULL);
 }
 
