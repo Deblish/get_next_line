@@ -6,11 +6,25 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:10:18 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/21 10:36:01 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/05/27 11:25:51 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	char		*d;
+	const char	*s;
+
+	if (!dst && !src)
+		return (0);
+	d = (char *)dst;
+	s = (const char *)src;
+	while (n--)
+		*d++ = *s++;
+	return (dst);
+}
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {
