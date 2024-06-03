@@ -6,12 +6,12 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/03 15:19:17 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:30:34 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#define BUFFER_SIZE 2
+#define BUFFER_SIZE 1
 
 //remove
 #include <fcntl.h>
@@ -86,7 +86,7 @@ static char	*ft_read(int fd, char *buffer)
 		}
 		if (bytes_read == 0)
 			break ;
-		bytes_saved[bytes_read] = 0;
+		bytes_saved[bytes_read] = '\0';
 		buffer = ft_strjoin(buffer, bytes_saved);
 		if (!buffer)
 		{
@@ -111,14 +111,18 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	buffer = ft_read(fd, buffer);
-	//{
-	//	free(buffer);
-	//	return (NULL);
-	//}
-	//free buffer?
-	ft_get_line(buffer, line); //if null clean buffer
-	ft_update_buffer(buffer);
-	return (buffer); //if null what?
+	if (!buffer)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	if (!ft_get_line(buffer, line))
+	{
+		free(buffer);
+		return (NULL);
+	}
+	ft_update_buffer(buffer); //if null?
+	return (buffer);
 }
 
 int	ft_open(char *file)
@@ -131,8 +135,8 @@ int main(void)
 	int fd;
 	fd = ft_open("test.txt");
 	printf("%s", get_next_line(fd));
-	//printf("%s", get_next_line(fd));
-	//printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
