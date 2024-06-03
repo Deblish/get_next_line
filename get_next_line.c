@@ -6,12 +6,12 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/03 18:26:28 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/03 22:37:42 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#define BUFFER_SIZE 2
+#define BUFFER_SIZE 1
 
 //remove
 #include <fcntl.h>
@@ -28,9 +28,10 @@ static char	*ft_update_buffer(char *buffer)
 	if (eol)
 		start = eol + 1;
 	if (!*start)
-	{
+	{//HERE
+		//printf("\tbuffer->%s<-", buffer);
 		free(buffer);
-		return (NULL);
+		//return (NULL);
 	}
 	new = malloc(ft_strlen(start) + sizeof(char));
 	if (!new)
@@ -39,7 +40,8 @@ static char	*ft_update_buffer(char *buffer)
 		return (NULL);
 	}
 	ft_strlcpy(new, start, ft_strlen(start) + sizeof(char));
-	free(buffer);
+	//free(buffer);
+	//return (NULL);
 	return (new);
 }
 
@@ -60,13 +62,14 @@ static char	*ft_get_line(char *buffer, char *line)
 		return (NULL);
 	}
 	ft_strlcpy(line, buffer, len + sizeof(char));
+	ft_update_buffer(buffer);
 	return (line);
 }
 
 static char	*ft_read(int fd, char *buffer)
 {
 	char	*bytes_saved;
-	//char	*old_buffer;
+	char	*old;
 	int		bytes_read;
 
 	bytes_saved = malloc(BUFFER_SIZE + sizeof(char));
@@ -87,12 +90,11 @@ static char	*ft_read(int fd, char *buffer)
 		}
 		if (bytes_read == 0)
 			break ;
-		//printf("->size:%zu<-", ft_strlen(bytes_saved));
-		//printf("->saved:%s<-", bytes_saved);
 		bytes_saved[bytes_read] = '\0';
-		//old_buffer = buffer;
+		old = buffer;
 		buffer = ft_strjoin(buffer, bytes_saved);
-		//free(old_buffer);
+		free(old);
+		//printf("->%s<-", bytes_saved);
 		if (!buffer)
 		{
 			free(bytes_saved);
@@ -126,7 +128,7 @@ char	*get_next_line(int fd)
 		free(buffer);
 		return (NULL);
 	}
-	ft_update_buffer(buffer); //if null?
+	//ft_update_buffer(buffer); //if null?
 	return (buffer);
 }
 
@@ -141,7 +143,8 @@ int main(void)
 	fd = ft_open("test.txt");
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
+	//printf("%s", get_next_line(fd));
+	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
