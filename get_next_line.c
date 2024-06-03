@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/03 22:37:42 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/04 00:01:39 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ static char	*ft_update_buffer(char *buffer)
 	if (eol)
 		start = eol + 1;
 	if (!*start)
-	{//HERE
-		//printf("\tbuffer->%s<-", buffer);
+	{
 		free(buffer);
-		//return (NULL);
+		return (NULL);
 	}
 	new = malloc(ft_strlen(start) + sizeof(char));
 	if (!new)
@@ -42,6 +41,7 @@ static char	*ft_update_buffer(char *buffer)
 	ft_strlcpy(new, start, ft_strlen(start) + sizeof(char));
 	//free(buffer);
 	//return (NULL);
+	//printf("->%s<-", new);
 	return (new);
 }
 
@@ -62,7 +62,6 @@ static char	*ft_get_line(char *buffer, char *line)
 		return (NULL);
 	}
 	ft_strlcpy(line, buffer, len + sizeof(char));
-	ft_update_buffer(buffer);
 	return (line);
 }
 
@@ -120,15 +119,16 @@ char	*get_next_line(int fd)
 	buffer = ft_read(fd, buffer);
 	if (!buffer)
 	{
-		free(buffer);
+		free(buffer); //not sure
 		return (NULL);
 	}
-	if (!ft_get_line(buffer, line))
+	line = ft_get_line(buffer, line);
+	if (!line)
 	{
 		free(buffer);
 		return (NULL);
 	}
-	//ft_update_buffer(buffer); //if null?
+	buffer = ft_update_buffer(buffer); //if null?
 	return (buffer);
 }
 
@@ -143,8 +143,8 @@ int main(void)
 	fd = ft_open("test.txt");
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
-	//printf("%s", get_next_line(fd));
-	//printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
