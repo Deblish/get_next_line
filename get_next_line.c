@@ -6,12 +6,12 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/03 17:30:34 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/03 18:26:28 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 2
 
 //remove
 #include <fcntl.h>
@@ -25,7 +25,7 @@ static char	*ft_update_buffer(char *buffer)
 
 	eol = ft_strchr(buffer, '\n');
 	start = buffer;
-	if (!eol)
+	if (eol)
 		start = eol + 1;
 	if (!*start)
 	{
@@ -66,6 +66,7 @@ static char	*ft_get_line(char *buffer, char *line)
 static char	*ft_read(int fd, char *buffer)
 {
 	char	*bytes_saved;
+	//char	*old_buffer;
 	int		bytes_read;
 
 	bytes_saved = malloc(BUFFER_SIZE + sizeof(char));
@@ -81,13 +82,17 @@ static char	*ft_read(int fd, char *buffer)
 		bytes_read = read(fd, bytes_saved, BUFFER_SIZE);
 		if (bytes_read < 0)
 		{
-			free(bytes_saved);
+			free(buffer);
 			return (NULL);
 		}
 		if (bytes_read == 0)
 			break ;
+		//printf("->size:%zu<-", ft_strlen(bytes_saved));
+		//printf("->saved:%s<-", bytes_saved);
 		bytes_saved[bytes_read] = '\0';
+		//old_buffer = buffer;
 		buffer = ft_strjoin(buffer, bytes_saved);
+		//free(old_buffer);
 		if (!buffer)
 		{
 			free(bytes_saved);
