@@ -6,44 +6,99 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:10:18 by aapadill          #+#    #+#             */
-/*   Updated: 2024/05/27 11:25:51 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/03 11:40:14 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
-	char		*d;
-	const char	*s;
+	size_t	srclen;
 
-	if (!dst && !src)
+	srclen = ft_strlen(src);
+	if (!dstsize)
+		return (srclen);
+	while (dstsize - 1 && *src)
+	{
+		*dst++ = *src++;
+		dstsize--;
+	}
+	*dst = 0;
+	return (srclen);
+}
+
+char	*ft_strdup(const char *s1)
+{
+	size_t	len;
+	char	*dest;
+	char	*result;
+
+	len = ft_strlen(s1);
+	dest = malloc((len + 1) * sizeof(char));
+	if (!dest)
+		return (NULL);
+	result = dest;
+	while (*s1)
+		*dest++ = *s1++;
+	*dest = 0;
+	return (result);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	s_len;
+	size_t	writable;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (ft_strdup(""));
+	writable = len;
+	if (s_len - start < len)
+		writable = s_len - start;
+	sub = malloc(writable + sizeof(char));
+	if (!sub)
+		return (NULL);
+	ft_strlcpy(sub, s + start, writable + 1);
+	return (sub);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	const char	*end;
+
+	if (!s)
 		return (0);
-	d = (char *)dst;
-	s = (const char *)src;
-	while (n--)
-		*d++ = *s++;
-	return (dst);
+	end = s;
+	while (*end)
+		end++;
+	return (end - s);
 }
 
-void	*ft_memmove(void *dst, const void *src, size_t len)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	char		*temp_dst;
-	const char	*temp_src;
+	char	*str;
+	char	*joined;
 
-	if (!src && !dst)
-		return (dst);
-	temp_dst = (char *)dst;
-	temp_src = (const char *)src;
-	if ((const char *)src < (char *)dst)
-		while (len--)
-			*(temp_dst + len) = *(temp_src + len);
-	else
-		while (len--)
-			*temp_dst++ = *temp_src++;
-	return (dst);
+	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	//clean possible '/n's
+	if (!str)
+		return (NULL); //free s1
+	joined = str;
+	while (s1 && *s1)
+		*str++ = *s1++;
+	while (s2 && *s2)
+		*str++ = *s2++;
+	*str = 0;
+	if (s1)
+		free(s1);
+	return (joined);
 }
 
+/*
 void	ft_bzero(void *s, size_t n)
 {
 	unsigned char	*p;
@@ -52,6 +107,7 @@ void	ft_bzero(void *s, size_t n)
 	while (n--)
 		*p++ = 0;
 }
+*/
 
 char	*ft_strchr(const char *s, int c)
 {
