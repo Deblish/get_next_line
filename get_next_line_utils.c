@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:10:18 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/03 22:37:22 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/04 00:27:36 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*joined;
 
 	str = malloc(ft_strlen(s1) + ft_strlen(s2) + sizeof(char));
-	printf("\ts1->%s\t", s1);
-	printf("\ts2->%s\n", s2);
+	//printf("\ts1->%s\t", s1);
+	//printf("\ts2->%s\n", s2);
 	//clean possible '/n's
 	if (!str)
 		return (NULL);

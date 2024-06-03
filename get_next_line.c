@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/04 00:01:39 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/04 00:26:33 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	buffer = ft_update_buffer(buffer); //if null?
-	return (buffer);
+	return (line);
 }
 
 int	ft_open(char *file)
