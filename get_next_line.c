@@ -6,16 +6,15 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/04 00:26:33 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/07 17:16:51 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#define BUFFER_SIZE 1
-
 //remove
-#include <fcntl.h>
-#include <stdio.h>
+//#include <fcntl.h>
+//#include <stdio.h>
+//#define BUFFER_SIZE 1
 
 static char	*ft_update_buffer(char *buffer)
 {
@@ -39,16 +38,15 @@ static char	*ft_update_buffer(char *buffer)
 		return (NULL);
 	}
 	ft_strlcpy(new, start, ft_strlen(start) + sizeof(char));
-	//free(buffer);
-	//return (NULL);
-	//printf("->%s<-", new);
+	free(buffer);
 	return (new);
 }
 
-static char	*ft_get_line(char *buffer, char *line)
+static char	*ft_get_line(char *buffer)
 {
+	char	*line;
 	char	*eol;
-	int		len;
+	size_t	len;
 
 	eol = ft_strchr(buffer, '\n');
 	if (!eol) //technically you could erase this line
@@ -69,7 +67,7 @@ static char	*ft_read(int fd, char *buffer)
 {
 	char	*bytes_saved;
 	char	*old;
-	int		bytes_read;
+	ssize_t	bytes_read;
 
 	bytes_saved = malloc(BUFFER_SIZE + sizeof(char));
 	if (!bytes_saved)
@@ -111,6 +109,7 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*line;
 
+	line = NULL;
 	if (fd < 0 || BUFFER_SIZE < 1 || 0 > read(fd, 0, 0))
 	{
 		free(buffer);
@@ -119,19 +118,27 @@ char	*get_next_line(int fd)
 	buffer = ft_read(fd, buffer);
 	if (!buffer)
 	{
-		free(buffer); //not sure
+		//free(buffer); //not sure
 		return (NULL);
 	}
-	line = ft_get_line(buffer, line);
+	line = ft_get_line(buffer);
 	if (!line)
 	{
+		//free(line); //not sure
 		free(buffer);
 		return (NULL);
 	}
-	buffer = ft_update_buffer(buffer); //if null?
+	buffer = ft_update_buffer(buffer);
+	//if (!buffer)
+	//{
+		//free(line);
+		//line = NULL;
+	//}
 	return (line);
 }
 
+/*
+//remove
 int	ft_open(char *file)
 {
 	return (open(file, O_RDONLY));
@@ -139,14 +146,24 @@ int	ft_open(char *file)
 
 int main(void)
 {
-	int fd;
+	int		fd;
+	char	*line;
+
 	fd = ft_open("test.txt");
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break;
+		printf("%s", line);
+		free(line);
+	}
+	//printf("%s", get_next_line(fd));
+	//printf("%s", get_next_line(fd));
+	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	return 0;
 }
+*/

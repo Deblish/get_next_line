@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:10:10 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/03 11:40:28 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/04 19:59:56 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-//size_t	ft_strlen(const char *s);
-
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-char	*ft_strdup(const char *s1);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
 size_t	ft_strlen(const char *s);
 char	*get_next_line(int fd);
 char	*ft_strjoin(char *s1, char *s2);
