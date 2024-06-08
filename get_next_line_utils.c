@@ -6,14 +6,11 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:10:18 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/04 00:27:36 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 01:12:48 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-//remove
-#include <stdio.h>
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
@@ -49,8 +46,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*joined;
 
 	str = malloc(ft_strlen(s1) + ft_strlen(s2) + sizeof(char));
-	//printf("\ts1->%s\t", s1);
-	//printf("\ts2->%s\n", s2);
 	//clean possible '/n's
 	if (!str)
 		return (NULL);
@@ -59,7 +54,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		*str++ = *s1++;
 	while (s2 && *s2)
 		*str++ = *s2++;
-	*str = 0;
+	*str = '\0';
 	return (joined);
 }
 

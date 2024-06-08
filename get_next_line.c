@@ -6,15 +6,18 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/07 17:16:51 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 01:24:09 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+/*
 //remove
-//#include <fcntl.h>
-//#include <stdio.h>
-//#define BUFFER_SIZE 1
+#include <fcntl.h>
+#include <stdio.h>
+#define BUFFER_SIZE 1
+*/
 
 static char	*ft_update_buffer(char *buffer)
 {
@@ -53,7 +56,7 @@ static char	*ft_get_line(char *buffer)
 		len = ft_strlen(buffer);
 	if (eol)
 		len = eol - buffer + 1;
-	line = malloc(len + sizeof(char)); 
+	line = malloc(len + sizeof(char));
 	if (!line)
 	{
 		free(buffer);
@@ -82,6 +85,7 @@ static char	*ft_read(int fd, char *buffer)
 		bytes_read = read(fd, bytes_saved, BUFFER_SIZE);
 		if (bytes_read < 0)
 		{
+			free(bytes_saved);
 			free(buffer);
 			return (NULL);
 		}
@@ -91,7 +95,6 @@ static char	*ft_read(int fd, char *buffer)
 		old = buffer;
 		buffer = ft_strjoin(buffer, bytes_saved);
 		free(old);
-		//printf("->%s<-", bytes_saved);
 		if (!buffer)
 		{
 			free(bytes_saved);
@@ -113,27 +116,24 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE < 1 || 0 > read(fd, 0, 0))
 	{
 		free(buffer);
+		buffer = NULL;
 		return (NULL);
 	}
 	buffer = ft_read(fd, buffer);
 	if (!buffer)
-	{
-		//free(buffer); //not sure
 		return (NULL);
-	}
 	line = ft_get_line(buffer);
 	if (!line)
 	{
-		//free(line); //not sure
-		free(buffer);
+		buffer = NULL;
 		return (NULL);
 	}
 	buffer = ft_update_buffer(buffer);
-	//if (!buffer)
-	//{
-		//free(line);
-		//line = NULL;
-	//}
+	if (!ft_strchr(line, '\n'))
+	{
+		free(buffer);
+		buffer = NULL;
+	}
 	return (line);
 }
 
@@ -158,11 +158,6 @@ int main(void)
 		printf("%s", line);
 		free(line);
 	}
-	//printf("%s", get_next_line(fd));
-	//printf("%s", get_next_line(fd));
-	//printf("%s", get_next_line(fd));
-	//printf("%s", get_next_line(fd));
-	//printf("%s", get_next_line(fd));
 	//printf("%s", get_next_line(fd));
 	return 0;
 }
