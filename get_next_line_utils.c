@@ -6,46 +6,35 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:10:18 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 01:12:48 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 03:37:50 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	srclen;
-
-	srclen = ft_strlen(src);
-	if (!dstsize)
-		return (srclen);
-	while (dstsize - 1 && *src)
-	{
-		*dst++ = *src++;
-		dstsize--;
-	}
-	*dst = 0;
-	return (srclen);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	const char	*end;
-
-	if (!s)
-		return (0);
-	end = s;
-	while (*end)
-		end++;
-	return (end - s);
+	while (*s && *s != (char)c)
+		s++;
+	if (*s == (char)c)
+		return ((char *)s);
+	if (!*s)
+		return (NULL);
+	return ((char *)s);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str;
 	char	*joined;
+	size_t	s1_len;
+	size_t	s2_len;
 
-	str = malloc(ft_strlen(s1) + ft_strlen(s2) + sizeof(char));
+	s1_len = 0;
+	if (s1)
+		s1_len = ft_strchr(s1, '\0') - s1;
+	s2_len = ft_strchr(s2, '\0') - s2;
+	str = malloc(s1_len + s2_len + sizeof(char));
 	//clean possible '/n's
 	if (!str)
 		return (NULL);
@@ -58,24 +47,18 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (joined);
 }
 
-/*
-void	ft_bzero(void *s, size_t n)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
-	unsigned char	*p;
+	size_t	srclen;
 
-	p = (unsigned char *)s;
-	while (n--)
-		*p++ = 0;
-}
-*/
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s && *s != (char)c)
-		s++;
-	if (*s == (char)c)
-		return ((char *)s);
-	if (!*s)
-		return (NULL);
-	return ((char *)s);
+	srclen = ft_strchr(src, '\0') - src;
+	if (!dstsize)
+		return (srclen);
+	while (dstsize - 1 && *src)
+	{
+		*dst++ = *src++;
+		dstsize--;
+	}
+	*dst = 0;
+	return (srclen);
 }

@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 01:24:09 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 03:05:26 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 //remove
 #include <fcntl.h>
 #include <stdio.h>
-#define BUFFER_SIZE 1
 */
 
 static char	*ft_update_buffer(char *buffer)
@@ -34,13 +33,13 @@ static char	*ft_update_buffer(char *buffer)
 		free(buffer);
 		return (NULL);
 	}
-	new = malloc(ft_strlen(start) + sizeof(char));
+	new = malloc(ft_strchr(start, '\0') - buffer + sizeof(char));
 	if (!new)
 	{
 		free(buffer);
 		return (NULL);
 	}
-	ft_strlcpy(new, start, ft_strlen(start) + sizeof(char));
+	ft_strlcpy(new, start, ft_strchr(start, '\0') - buffer + sizeof(char));
 	free(buffer);
 	return (new);
 }
@@ -53,7 +52,7 @@ static char	*ft_get_line(char *buffer)
 
 	eol = ft_strchr(buffer, '\n');
 	if (!eol) //technically you could erase this line
-		len = ft_strlen(buffer);
+		len = ft_strchr(buffer, '\0') - buffer;
 	if (eol)
 		len = eol - buffer + 1;
 	line = malloc(len + sizeof(char));
