@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 03:05:26 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 12:56:24 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static char	*ft_get_line(char *buffer)
 	size_t	len;
 
 	eol = ft_strchr(buffer, '\n');
-	if (!eol) //technically you could erase this line
+	if (!eol)
 		len = ft_strchr(buffer, '\0') - buffer;
 	if (eol)
 		len = eol - buffer + 1;
@@ -77,7 +77,6 @@ static char	*ft_read(int fd, char *buffer)
 		free(buffer);
 		return (NULL);
 	}
-	//check for '\n' and erase them?
 	bytes_read = 1;
 	while (bytes_read > 0)
 	{
@@ -111,7 +110,6 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*line;
 
-	line = NULL;
 	if (fd < 0 || BUFFER_SIZE < 1 || 0 > read(fd, 0, 0))
 	{
 		free(buffer);

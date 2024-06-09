@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:10:18 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 03:37:50 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 04:23:27 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ char	*ft_strjoin(char *s1, char *s2)
 		s1_len = ft_strchr(s1, '\0') - s1;
 	s2_len = ft_strchr(s2, '\0') - s2;
 	str = malloc(s1_len + s2_len + sizeof(char));
-	//clean possible '/n's
 	if (!str)
 		return (NULL);
 	joined = str;

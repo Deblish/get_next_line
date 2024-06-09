@@ -6,19 +6,19 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:10:10 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 03:10:09 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 12:50:19 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 100
-#endif
-
 # include <unistd.h>
 # include <stdlib.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 100
+# endif
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);
