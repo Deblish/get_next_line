@@ -1,22 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 15:39:14 by aapadill         ###   ########.fr       */
+/*   Created: 2024/06/09 16:02:10 by aapadill          #+#    #+#             */
+/*   Updated: 2024/06/09 16:24:07 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-
-/*
-//remove
-#include <fcntl.h>
-#include <stdio.h>
-*/
+#include "get_next_line_bonus.h"
 
 static char	*ft_update_buffer(char *buffer)
 {
@@ -119,29 +113,31 @@ static char	*ft_read(int fd, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[OPEN_MAX];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE < 1 || 0 > read(fd, 0, 0))
+	if (fd < 0 || fd > OPEN_MAX)
+		return (NULL);
+	if (BUFFER_SIZE < 1 || 0 > read(fd, 0, 0))
 	{
-		free(buffer);
-		buffer = NULL;
+		free(buffer[fd]);
+		buffer[fd] = NULL;
 		return (NULL);
 	}
-	buffer = ft_read(fd, buffer);
-	if (!buffer)
+	buffer[fd] = ft_read(fd, buffer[fd]);
+	if (!buffer[fd])
 		return (NULL);
-	line = ft_get_line(buffer);
+	line = ft_get_line(buffer[fd]);
 	if (!line)
 	{
-		buffer = NULL;
+		buffer[fd] = NULL;
 		return (NULL);
 	}
-	buffer = ft_update_buffer(buffer);
+	buffer[fd] = ft_update_buffer(buffer[fd]);
 	if (!ft_strchr(line, '\n'))
 	{
-		free(buffer);
-		buffer = NULL;
+		free(buffer[fd]);
+		buffer[fd] = NULL;
 	}
 	return (line);
 }
@@ -171,3 +167,4 @@ int main(void)
 	return 0;
 }
 */
+
