@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 16:07:10 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 16:09:43 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 16:29:41 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,3 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	*dst = 0;
 	return (srclen);
 }
-

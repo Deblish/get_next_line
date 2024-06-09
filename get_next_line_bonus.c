@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 16:02:10 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 16:24:07 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 16:33:09 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,10 +129,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = ft_get_line(buffer[fd]);
 	if (!line)
-	{
-		buffer[fd] = NULL;
-		return (NULL);
-	}
+		return (buffer[fd] = NULL, NULL);
 	buffer[fd] = ft_update_buffer(buffer[fd]);
 	if (!ft_strchr(line, '\n'))
 	{
@@ -141,30 +138,3 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-
-/*
-//remove
-int	ft_open(char *file)
-{
-	return (open(file, O_RDONLY));
-}
-
-int main(void)
-{
-	int		fd;
-	char	*line;
-
-	fd = ft_open("test.txt");
-	while (1)
-	{
-		line = get_next_line(fd);
-		if (!line)
-			break;
-		printf("%s", line);
-		free(line);
-	}
-	//printf("%s", get_next_line(fd));
-	return 0;
-}
-*/
-

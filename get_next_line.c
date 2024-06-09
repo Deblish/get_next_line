@@ -6,17 +6,11 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 18:06:36 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 15:39:14 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 16:36:25 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-/*
-//remove
-#include <fcntl.h>
-#include <stdio.h>
-*/
 
 static char	*ft_update_buffer(char *buffer)
 {
@@ -145,29 +139,3 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-
-/*
-//remove
-int	ft_open(char *file)
-{
-	return (open(file, O_RDONLY));
-}
-
-int main(void)
-{
-	int		fd;
-	char	*line;
-
-	fd = ft_open("test.txt");
-	while (1)
-	{
-		line = get_next_line(fd);
-		if (!line)
-			break;
-		printf("%s", line);
-		free(line);
-	}
-	//printf("%s", get_next_line(fd));
-	return 0;
-}
-*/
