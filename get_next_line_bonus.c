@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 16:02:10 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 16:33:09 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/09 16:41:50 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	*ft_get_line(char *buffer)
 	return (line);
 }
 
-static int	ft_read_helper(ssize_t bytes_read, char **aux, char **buffer)
+static char	ft_read_helper(ssize_t bytes_read, char **aux, char **buffer)
 {
 	char	*old;
 
@@ -89,7 +89,7 @@ static char	*ft_read(int fd, char *buffer)
 {
 	char	*aux;
 	ssize_t	bytes_read;
-	int		stopper;
+	char	stopper;
 
 	aux = malloc(BUFFER_SIZE + sizeof(char));
 	if (!aux)
