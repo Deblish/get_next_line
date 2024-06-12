@@ -6,7 +6,7 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 16:05:51 by aapadill          #+#    #+#             */
-/*   Updated: 2024/06/09 16:29:32 by aapadill         ###   ########.fr       */
+/*   Updated: 2024/06/12 09:42:09 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <limits.h>
+//# include <limits.h>
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1024
+# endif
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 100
